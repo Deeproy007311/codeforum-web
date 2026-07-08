@@ -5,7 +5,6 @@ export interface QuestionAuthor {
     avatar?: string;
 }
 
-// Shape returned by GET /api/questions (list)
 export interface Question {
     _id: string;
     title: string;
@@ -19,21 +18,21 @@ export interface Question {
     updatedAt: string;
 }
 
-// Shape returned by GET /api/questions/:id (detail) — has extra computed fields
 export interface QuestionDetail extends Question {
     score: number;
-    myVote: number; // -1, 0, or 1
+    myVote: number;
 }
 
 export interface Answer {
     _id: string;
-    question: string;
-    description: string;
+    content: string;
     author: QuestionAuthor;
+    question: string;
+    isAccepted: boolean;
     upvotes: number;
     downvotes: number;
-    score: number;
-    myVote: number;
+    score?: number;
+    myVote?: number;
     createdAt: string;
     updatedAt: string;
 }
@@ -54,4 +53,10 @@ export interface CreateQuestionPayload {
     title: string;
     description: string;
     tags: string[];
+}
+
+export interface GetAnswersResponse {
+    success: boolean;
+    count: number;
+    answers: Answer[];
 }

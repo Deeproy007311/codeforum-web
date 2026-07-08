@@ -7,6 +7,8 @@ import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { motion } from "framer-motion";
+import { Code2, ArrowRight, Mail, Lock, User, AtSign, Loader2 } from "lucide-react";
 
 function RegisterPage() {
     const navigate = useNavigate();
@@ -37,76 +39,140 @@ function RegisterPage() {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-            <div className="w-full max-w-sm rounded-lg border bg-white p-8 shadow-sm">
-                <h1 className="mb-6 text-2xl font-bold">Create your account</h1>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="name">Full Name</Label>
-                        <Input
-                            id="name"
-                            type="text"
-                            placeholder="Deep Roy"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="username">Username</Label>
-                        <Input
-                            id="username"
-                            type="text"
-                            placeholder="deeproy"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            placeholder="you@example.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                            id="password"
-                            type="password"
-                            placeholder="••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            minLength={6}
-                        />
-                    </div>
-
-                    <Button
-                        type="submit"
-                        className="w-full"
-                        disabled={mutation.isPending}
-                    >
-                        {mutation.isPending ? "Creating account..." : "Register"}
-                    </Button>
-                </form>
-
-                <p className="mt-4 text-center text-sm text-gray-600">
-                    Already have an account?{" "}
-                    <Link to="/login" className="font-medium underline">
-                        Log In
-                    </Link>
-                </p>
+        <div className="relative flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-white to-indigo-50/40 px-4 py-12 overflow-hidden">
+            {/* Soft background glow effects */}
+            <div className="pointer-events-none absolute inset-0">
+                <div className="absolute top-1/4 left-1/4 h-[350px] w-[350px] rounded-full bg-indigo-500/5 blur-[80px]" />
+                <div className="absolute bottom-1/4 right-1/4 h-[350px] w-[350px] rounded-full bg-violet-500/5 blur-[80px]" />
             </div>
+
+            {/* Subtle grid pattern */}
+            <div
+                className="pointer-events-none absolute inset-0 opacity-[0.02]"
+                style={{
+                    backgroundImage:
+                        "linear-gradient(#4f46e5 1px, transparent 1px), linear-gradient(90deg, #4f46e5 1px, transparent 1px)",
+                    backgroundSize: "30px 30px",
+                }}
+            />
+
+            <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="relative w-full max-w-md"
+            >
+                {/* Brand Logo & Title */}
+                <div className="mb-6 text-center">
+                    <Link to="/" className="inline-flex items-center gap-2.5 mb-4 group justify-center">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 shadow-md shadow-indigo-500/10 transition-transform group-hover:scale-105">
+                            <Code2 className="h-5 w-5 text-white" />
+                        </div>
+                        <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 bg-clip-text text-transparent">
+                            CodeForum
+                        </span>
+                    </Link>
+                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Create your account</h1>
+                    <p className="mt-1.5 text-sm text-slate-500">
+                        Join the community to get instant answers and review code.
+                    </p>
+                </div>
+
+                {/* Form Card */}
+                <div className="rounded-2xl border border-slate-200/70 bg-white/70 p-8 shadow-xl shadow-slate-100/50 backdrop-blur-xl">
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="space-y-1.5">
+                            <Label htmlFor="name" className="text-slate-700 font-semibold text-sm">Full Name</Label>
+                            <div className="relative">
+                                <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                                <Input
+                                    id="name"
+                                    type="text"
+                                    placeholder="Deep Roy"
+                                    className="pl-10 h-11 border-slate-200/80 bg-white text-slate-900 placeholder:text-slate-400 focus:border-indigo-500/50 focus:ring-indigo-500/10 transition-colors"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <Label htmlFor="username" className="text-slate-700 font-semibold text-sm">Username</Label>
+                            <div className="relative">
+                                <AtSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                                <Input
+                                    id="username"
+                                    type="text"
+                                    placeholder="deeproy"
+                                    className="pl-10 h-11 border-slate-200/80 bg-white text-slate-900 placeholder:text-slate-400 focus:border-indigo-500/50 focus:ring-indigo-500/10 transition-colors"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <Label htmlFor="email" className="text-slate-700 font-semibold text-sm">Email Address</Label>
+                            <div className="relative">
+                                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    placeholder="you@example.com"
+                                    className="pl-10 h-11 border-slate-200/80 bg-white text-slate-900 placeholder:text-slate-400 focus:border-indigo-500/50 focus:ring-indigo-500/10 transition-colors"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <Label htmlFor="password" className="text-slate-700 font-semibold text-sm">Password</Label>
+                            <div className="relative">
+                                <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    placeholder="••••••••"
+                                    className="pl-10 h-11 border-slate-200/80 bg-white text-slate-900 placeholder:text-slate-400 focus:border-indigo-500/50 focus:ring-indigo-500/10 transition-colors"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    minLength={6}
+                                />
+                            </div>
+                        </div>
+
+                        <Button
+                            type="submit"
+                            className="w-full h-11 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 font-bold text-white shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-70 disabled:pointer-events-none mt-2"
+                            disabled={mutation.isPending}
+                        >
+                            {mutation.isPending ? (
+                                <span className="flex items-center justify-center gap-2">
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    Creating account...
+                                </span>
+                            ) : (
+                                <span className="flex items-center justify-center gap-1.5">
+                                    Register
+                                    <ArrowRight className="h-4 w-4" />
+                                </span>
+                            )}
+                        </Button>
+                    </form>
+
+                    <div className="mt-6 text-center text-sm text-slate-500">
+                        Already have an account?{" "}
+                        <Link to="/login" className="font-semibold text-indigo-600 hover:text-indigo-700 underline underline-offset-4 decoration-indigo-600/30 hover:decoration-indigo-700 transition-colors">
+                            Log In
+                        </Link>
+                    </div>
+                </div>
+            </motion.div>
         </div>
     );
 }

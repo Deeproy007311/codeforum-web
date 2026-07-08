@@ -7,6 +7,7 @@ import LandingPage from "@/features/questions/LandingPage";
 import QuestionsListPage from "@/features/questions/QuestionsListPage";
 import { useAuthStore } from "@/store/authStore";
 import { getCurrentUser } from "@/api/auth";
+import QuestionDetailPage from "./features/questions/QuestionDetailPage";
 
 function App() {
   const token = useAuthStore((state) => state.token);
@@ -49,6 +50,7 @@ function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/questions" element={<QuestionsListPage />} />
+        <Route path="/questions/:id" element={<QuestionDetailPage />} />
       </Route>
     </Routes>
   );

@@ -3,9 +3,11 @@ import Navbar from "./Navbar";
 
 function Layout() {
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#060812] transition-colors duration-300">
             <Navbar />
-            <Outlet />
+            <main className="flex-1 flex flex-col">
+                <Outlet />
+            </main>
         </div>
     );
 }
