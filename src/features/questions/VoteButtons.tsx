@@ -11,6 +11,8 @@ interface VoteButtonsProps {
     onDownvote: () => void;
     disabled?: boolean;
     isPending?: boolean;
+    isUpvoting?: boolean;
+    isDownvoting?: boolean;
 }
 
 function VoteButtons({
@@ -21,13 +23,16 @@ function VoteButtons({
     onDownvote,
     disabled,
     isPending = false,
+    isUpvoting = false,
+    isDownvoting = false,
 }: VoteButtonsProps) {
     const score = upvotes - downvotes;
+    const anyPending = isPending || isUpvoting || isDownvoting;
 
     return (
-        <div className="flex flex-col items-center gap-1.5 p-1 rounded-xl bg-slate-50/50 border border-slate-100/80 dark:bg-slate-900/60 dark:border-slate-800/60 min-w-[40px] h-fit">
+        <div className="flex flex-col items-center gap-1.5 p-1 rounded-xl bg-slate-50/50 border border-slate-100/80 dark:bg-slate-900/60 dark:border-slate-800/60 min-w-[40px] h-fit shadow-xs">
             {/* Upvote Button */}
-            <motion.div whileTap={(!disabled && !isPending) ? { scale: 0.85 } : {}}>
+            <motion.div whileTap={(!disabled && !anyPending) ? { scale: 0.85 } : {}}>
                 <Button
                     variant="ghost"
                     size="icon"
@@ -37,15 +42,19 @@ function VoteButtons({
                         disabled && "opacity-50 cursor-not-allowed"
                     )}
                     onClick={onUpvote}
-                    disabled={disabled || isPending}
+                    disabled={disabled || anyPending}
                 >
-                    <ChevronUp className="h-5 w-5" />
+                    {isUpvoting ? (
+                        <Loader2 className="h-4 w-4 animate-spin text-emerald-600 dark:text-emerald-400" />
+                    ) : (
+                        <ChevronUp className="h-5 w-5" />
+                    )}
                 </Button>
             </motion.div>
 
             {/* Score / Loader */}
             <div className="h-5 flex items-center justify-center">
-                {isPending ? (
+                {isPending && !isUpvoting && !isDownvoting ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin text-indigo-500" />
                 ) : (
                     <span className={cn(
@@ -60,7 +69,7 @@ function VoteButtons({
             </div>
 
             {/* Downvote Button */}
-            <motion.div whileTap={(!disabled && !isPending) ? { scale: 0.85 } : {}}>
+            <motion.div whileTap={(!disabled && !anyPending) ? { scale: 0.85 } : {}}>
                 <Button
                     variant="ghost"
                     size="icon"
@@ -70,9 +79,13 @@ function VoteButtons({
                         disabled && "opacity-50 cursor-not-allowed"
                     )}
                     onClick={onDownvote}
-                    disabled={disabled || isPending}
+                    disabled={disabled || anyPending}
                 >
-                    <ChevronDown className="h-5 w-5" />
+                    {isDownvoting ? (
+                        <Loader2 className="h-4 w-4 animate-spin text-rose-600 dark:text-rose-400" />
+                    ) : (
+                        <ChevronDown className="h-5 w-5" />
+                    )}
                 </Button>
             </motion.div>
         </div>

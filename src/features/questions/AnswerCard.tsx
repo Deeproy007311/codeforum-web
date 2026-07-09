@@ -1,14 +1,17 @@
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { upvoteAnswer, downvoteAnswer } from "@/api/votes";
-import { acceptAnswer } from "@/api/answers";
+import { acceptAnswer, editAnswer } from "@/api/answers";
 import { useAuthStore } from "@/store/authStore";
 import VoteButtons from "./VoteButtons";
 import type { Answer } from "@/types/question";
-import { Check, Clock, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
+import { CheckCircle2, Edit2, Loader2, Check } from "lucide-react";
 
 interface AnswerCardProps {
     answer: Answer;
@@ -16,21 +19,11 @@ interface AnswerCardProps {
     isQuestionOwner: boolean;
 }
 
-function timeAgo(dateString: string) {
-    const seconds = Math.floor((Date.now() - new Date(dateString).getTime()) / 1000);
-    const intervals: [number, string][] = [
-        [31536000, "y"], [2592000, "mo"], [86400, "d"], [3600, "h"], [60, "m"],
-    ];
-    for (const [secs, label] of intervals) {
-        const count = Math.floor(seconds / secs);
-        if (count >= 1) return `${count}${label} ago`;
-    }
-    return "just now";
-}
-
 function AnswerCard({ answer, questionId, isQuestionOwner }: AnswerCardProps) {
     const queryClient = useQueryClient();
     const user = useAuthStore((state) => state.user);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editContent, setEditContent] = useState(answer.content);
 
     const voteMutation = useMutation({
         mutationFn: (type: "up" | "down") =>
@@ -50,21 +43,38 @@ function AnswerCard({ answer, questionId, isQuestionOwner }: AnswerCardProps) {
             queryClient.invalidateQueries({ queryKey: ["question", questionId] });
         },
         onError: (error: any) => {
-            toast.error(
-                error?.response?.data?.message || "Failed to accept answer"
-            );
+            toast.error(error?.response?.data?.message || "Failed to accept answer");
+        },
+    });
+
+    const editMutation = useMutation({
+        mutationFn: () => editAnswer(answer._id, editContent),
+        onSuccess: () => {
+            toast.success("Answer updated");
+            setIsEditing(false);
+            queryClient.invalidateQueries({ queryKey: ["question", questionId] });
+        },
+        onError: (error: any) => {
+            toast.error(error?.response?.data?.message || "Failed to update answer");
         },
     });
 
     const isOwnAnswer = user?._id === answer.author?._id;
 
     return (
-        <div
-            className={`rounded-xl border p-5 shadow-xs transition-all duration-300 ${answer.isAccepted
-                    ? "border-emerald-500/30 bg-emerald-500/[0.03] dark:border-emerald-500/25 dark:bg-emerald-950/10"
-                    : "border-slate-100 bg-white dark:border-slate-800/80 dark:bg-slate-900/40"
+        <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className={`relative overflow-hidden rounded-xl border p-5 transition-all duration-200 hover:shadow-sm ${answer.isAccepted
+                    ? "border-emerald-500/30 bg-emerald-50/20 dark:border-emerald-500/20 dark:bg-emerald-950/10"
+                    : "border-slate-100 bg-white dark:border-slate-800/80 dark:bg-slate-900/40 hover:border-slate-200 dark:hover:border-slate-700"
                 }`}
         >
+            {answer.isAccepted && (
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500 rounded-l-xl" />
+            )}
+
             <div className="flex gap-4">
                 <VoteButtons
                     upvotes={answer.upvotes}
@@ -73,64 +83,106 @@ function AnswerCard({ answer, questionId, isQuestionOwner }: AnswerCardProps) {
                     onUpvote={() => voteMutation.mutate("up")}
                     onDownvote={() => voteMutation.mutate("down")}
                     disabled={isOwnAnswer}
-                    isPending={voteMutation.isPending}
+                    isUpvoting={voteMutation.isPending && voteMutation.variables === "up"}
+                    isDownvoting={voteMutation.isPending && voteMutation.variables === "down"}
                 />
 
                 <div className="flex-1 min-w-0">
                     {answer.isAccepted && (
-                        <Badge className="mb-3 bg-emerald-500/10 text-emerald-600 border-emerald-500/25 hover:bg-emerald-500/15 dark:bg-emerald-500/20 dark:text-emerald-400 flex items-center gap-1 text-[11px] font-semibold py-0.5 px-2.5 rounded-full w-fit">
-                            <Check className="h-3.5 w-3.5" />
-                            Accepted Solution
+                        <Badge className="mb-3 bg-emerald-500/10 text-emerald-650 hover:bg-emerald-500/15 border-emerald-500/20 dark:bg-emerald-500/20 dark:text-emerald-450 flex items-center gap-1 w-fit text-[11px] font-semibold py-0.5 px-2">
+                            <CheckCircle2 className="h-3 w-3" />
+                            Accepted Answer
                         </Badge>
                     )}
 
-                    <p className="whitespace-pre-wrap text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-normal">
-                        {answer.content}
-                    </p>
-
-                    <div className="mt-5 flex items-center justify-between flex-wrap gap-3">
-                        <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2">
-                                <Avatar className="h-6 w-6 ring-2 ring-slate-100 dark:ring-slate-800">
-                                    <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-violet-500 text-white font-bold text-[10px]">
-                                        {answer.author?.username?.[0]?.toUpperCase() ?? "?"}
-                                    </AvatarFallback>
-                                </Avatar>
-                                <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
-                                    {answer.author?.username ?? "unknown"}
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-1 text-xs text-slate-400 dark:text-slate-500 font-medium">
-                                <Clock className="h-3.5 w-3.5" />
-                                <span>{timeAgo(answer.createdAt)}</span>
+                    {isEditing ? (
+                        <div className="space-y-3">
+                            <Textarea
+                                value={editContent}
+                                onChange={(e) => setEditContent(e.target.value)}
+                                rows={5}
+                                className="w-full rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900/60"
+                            />
+                            <div className="flex gap-2">
+                                <Button
+                                    size="sm"
+                                    onClick={() => editMutation.mutate()}
+                                    disabled={editMutation.isPending}
+                                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium shadow-xs"
+                                >
+                                    {editMutation.isPending ? (
+                                        <>
+                                            <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                                            Saving...
+                                        </>
+                                    ) : (
+                                        "Save"
+                                    )}
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => {
+                                        setIsEditing(false);
+                                        setEditContent(answer.content);
+                                    }}
+                                    className="border-slate-200 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-900"
+                                >
+                                    Cancel
+                                </Button>
                             </div>
                         </div>
+                    ) : (
+                        <p className="whitespace-pre-wrap text-slate-700 dark:text-slate-200 text-[15px] leading-relaxed font-normal">
+                            {answer.content}
+                        </p>
+                    )}
 
-                        {isQuestionOwner && !answer.isAccepted && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => acceptMutation.mutate()}
-                                disabled={acceptMutation.isPending}
-                                className="h-8 rounded-lg border-emerald-200 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 dark:border-emerald-900/30 dark:text-emerald-400 dark:hover:bg-emerald-950/20 transition-all text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer"
-                            >
-                                {acceptMutation.isPending ? (
-                                    <>
-                                        <Loader2 className="h-3 w-3 animate-spin text-emerald-500" />
-                                        <span>Accepting...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Check className="h-3.5 w-3.5" />
-                                        <span>Accept Answer</span>
-                                    </>
-                                )}
-                            </Button>
-                        )}
+                    <div className="mt-6 flex items-center justify-between border-t border-slate-50 pt-4 dark:border-slate-800/40 flex-wrap gap-3">
+                        <div className="flex items-center gap-2">
+                            <Avatar className="h-6 w-6 ring-2 ring-slate-100 dark:ring-slate-800">
+                                <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-violet-500 text-white font-bold text-[10px]">
+                                    {answer.author?.username?.[0]?.toUpperCase() ?? "?"}
+                                </AvatarFallback>
+                            </Avatar>
+                            <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+                                {answer.author?.username ?? "unknown"}
+                            </span>
+                        </div>
+
+                        <div className="flex gap-2">
+                            {isOwnAnswer && !isEditing && (
+                                <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    onClick={() => setIsEditing(true)}
+                                    className="h-8 border-slate-200 hover:bg-slate-50 text-slate-600 dark:border-slate-800 dark:text-slate-350 dark:hover:bg-slate-900 flex items-center gap-1.5"
+                                >
+                                    <Edit2 className="h-3 w-3" />
+                                    Edit
+                                </Button>
+                            )}
+                            {isQuestionOwner && !answer.isAccepted && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => acceptMutation.mutate()}
+                                    disabled={acceptMutation.isPending}
+                                    className="h-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border-emerald-200/60 dark:text-emerald-400 dark:hover:bg-emerald-950/20 dark:border-emerald-800/80 flex items-center gap-1.5"
+                                >
+                                    {acceptMutation.isPending ? (
+                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                    ) : (
+                                        <Check className="h-3 w-3" />
+                                    )}
+                                    Mark as Accepted
+                                </Button>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
 
