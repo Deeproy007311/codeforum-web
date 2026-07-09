@@ -10,6 +10,7 @@ import { getCurrentUser } from "@/api/auth";
 import QuestionDetailPage from "./features/questions/QuestionDetailPage";
 import AskQuestionPage from "@/features/questions/AskQuestionPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import EditQuestionPage from "@/features/questions/EditQuestionPage";
 
 function App() {
   const token = useAuthStore((state) => state.token);
@@ -56,6 +57,7 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/ask" element={<AskQuestionPage />} />
+          <Route path="/questions/:id/edit" element={<EditQuestionPage />} />
         </Route>
       </Route>
     </Routes>
