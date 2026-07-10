@@ -274,17 +274,15 @@ function LandingPage() {
                                     <button
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
-                                        className={`w-full text-left p-4.5 rounded-2xl border transition-all flex items-start gap-4 focus:outline-hidden cursor-pointer ${
-                                            isSelected
-                                                ? "bg-white border-indigo-200 shadow-md shadow-indigo-100/40 translate-x-1"
-                                                : "bg-transparent border-slate-100 hover:bg-slate-50/80 hover:border-slate-200"
-                                        }`}
+                                        className={`w-full text-left p-4.5 rounded-2xl border transition-all flex items-start gap-4 focus:outline-hidden cursor-pointer ${isSelected
+                                            ? "bg-white border-indigo-200 shadow-md shadow-indigo-100/40 translate-x-1"
+                                            : "bg-transparent border-slate-100 hover:bg-slate-50/80 hover:border-slate-200"
+                                            }`}
                                     >
-                                        <div className={`mt-0.5 p-2.5 rounded-xl border ${
-                                            isSelected
-                                                ? "bg-indigo-600 text-white border-indigo-700"
-                                                : "bg-slate-100 text-slate-500 border-slate-200"
-                                        }`}>
+                                        <div className={`mt-0.5 p-2.5 rounded-xl border ${isSelected
+                                            ? "bg-indigo-600 text-white border-indigo-700"
+                                            : "bg-slate-100 text-slate-500 border-slate-200"
+                                            }`}>
                                             <Icon className="h-4.5 w-4.5" />
                                         </div>
                                         <div className="flex-1 min-w-0">
@@ -292,11 +290,10 @@ function LandingPage() {
                                                 <span className="font-bold text-[15px] text-slate-900">
                                                     {tab.title}
                                                 </span>
-                                                <span className={`text-[9px] font-bold py-0.5 px-1.5 rounded-full uppercase tracking-wider ${
-                                                    tab.badge === "Coming Soon"
-                                                        ? "bg-amber-50 text-amber-600 border border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900"
-                                                        : "bg-indigo-50 text-indigo-600 border border-indigo-100"
-                                                }`}>
+                                                <span className={`text-[9px] font-bold py-0.5 px-1.5 rounded-full uppercase tracking-wider ${tab.badge === "Coming Soon"
+                                                    ? "bg-amber-50 text-amber-600 border border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900"
+                                                    : "bg-indigo-50 text-indigo-600 border border-indigo-100"
+                                                    }`}>
                                                     {tab.badge}
                                                 </span>
                                             </div>
@@ -353,7 +350,7 @@ function LandingPage() {
                                                 </div>
                                                 <div className="text-[10px] text-indigo-400 uppercase tracking-wider font-bold">AI Auto-Reply</div>
                                                 <pre className="text-[11px] text-slate-200 leading-relaxed overflow-x-auto">
-{`const client = new MongoClient(uri, {
+                                                    {`const client = new MongoClient(uri, {
   maxPoolSize: 50,
   minPoolSize: 10
 });`}

@@ -14,6 +14,7 @@ import AnswerCard from "./AnswerCard";
 import AnswerForm from "./AnswerForm";
 import { deleteQuestion } from "@/api/questions";
 import { Button } from "@/components/ui/button";
+import AIAnswerSection from "./AIAnswerSection";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -324,6 +325,7 @@ function QuestionDetailPage() {
                 </div>
             </div>
 
+            <AIAnswerSection question={question} />
             <AnswerForm questionId={question._id} />
         </motion.div>
     );
