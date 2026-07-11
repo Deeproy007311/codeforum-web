@@ -27,3 +27,30 @@ export interface ImproveQuestionResponse {
     fromCache: boolean;
     usage: AIUsage;
 }
+export interface ExplainCodeResponse {
+    success: boolean;
+    explanation: string;
+    fromCache: boolean;
+    usage: AIUsage;
+    generatedBy: string;
+    model: string;
+}
+
+export interface AIHistoryEntry {
+    _id: string;
+    feature: "answer" | "improve-question" | "explain-code";
+    inputPreview: string;
+    fromCache: boolean;
+    createdAt: string;
+}
+
+export interface AIHistoryResponse {
+    success: boolean;
+    history: AIHistoryEntry[];
+    pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+    };
+}

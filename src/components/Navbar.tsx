@@ -51,18 +51,23 @@ function Navbar() {
                             Questions
                         </Button>
                     </Link>
+                    <Link to="/ai/explain-code">
+                        <Button variant="ghost" size="sm">
+                            AI Tools
+                        </Button>
+                    </Link>
 
                     {user ? (
                         <div className="flex items-center gap-3">
-                            <span className="hidden items-center gap-1.5 text-sm text-slate-600 dark:text-slate-300 sm:inline-flex">
+                            <Link to="/profile" className="hidden text-sm text-gray-600 hover:underline sm:inline">
                                 <span className="font-semibold">{user.username}</span>
                                 <span className="rounded-full bg-indigo-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400">
                                     {user.plan}
                                 </span>
-                            </span>
-                            <Button 
-                                variant="outline" 
-                                size="sm" 
+                            </Link>
+                            <Button
+                                variant="outline"
+                                size="sm"
                                 onClick={handleLogout}
                                 className="h-9 rounded-lg border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-red-600 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900/60 dark:hover:text-red-400 transition-colors"
                             >

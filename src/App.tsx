@@ -11,6 +11,8 @@ import QuestionDetailPage from "./features/questions/QuestionDetailPage";
 import AskQuestionPage from "@/features/questions/AskQuestionPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import EditQuestionPage from "@/features/questions/EditQuestionPage";
+import ExplainCodePage from "@/features/ai/ExplainCodePage";
+import ProfilePage from "@/features/profile/ProfilePage";
 
 function App() {
   const token = useAuthStore((state) => state.token);
@@ -57,7 +59,9 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/ask" element={<AskQuestionPage />} />
+          <Route path="/ai/explain-code" element={<ExplainCodePage />} />
           <Route path="/questions/:id/edit" element={<EditQuestionPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Route>
     </Routes>

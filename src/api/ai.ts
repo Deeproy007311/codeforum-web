@@ -1,5 +1,5 @@
 import { apiClient } from "./client";
-import type { AIUsage, GenerateAnswerResponse, ImproveQuestionResponse } from "@/types/ai";
+import type { AIUsage, GenerateAnswerResponse, ImproveQuestionResponse, ExplainCodeResponse, AIHistoryResponse } from "@/types/ai";
 
 
 export const generateAIAnswer = async (payload: {
@@ -29,5 +29,20 @@ export const improveQuestion = async (payload: {
         "/api/ai/improve-question",
         payload
     );
+    return data;
+};
+
+export const explainCode = async (code: string): Promise<ExplainCodeResponse> => {
+    const { data } = await apiClient.post<ExplainCodeResponse>(
+        "/api/ai/explain-code",
+        { code }
+    );
+    return data;
+};
+
+export const getAIHistory = async (page = 1, limit = 20): Promise<AIHistoryResponse> => {
+    const { data } = await apiClient.get<AIHistoryResponse>("/api/ai/history", {
+        params: { page, limit },
+    });
     return data;
 };
