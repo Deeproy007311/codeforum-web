@@ -14,3 +14,16 @@ export interface GenerateAnswerResponse {
     generatedBy: string;
     model: string;
 }
+
+export interface ImproveQuestionData {
+    title: string;
+    description: string;
+    suggestions: string[];
+}
+
+export interface ImproveQuestionResponse {
+    success: boolean;
+    data: ImproveQuestionData;
+    fromCache: boolean;
+    usage: AIUsage;
+}

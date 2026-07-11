@@ -4,17 +4,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
-import { 
-    Sparkles, 
-    Bold, 
-    Italic, 
-    Code, 
-    Link2, 
-    Eye, 
-    BookOpen, 
-    Send, 
-    X, 
-    CheckCircle2, 
+import {
+    Sparkles,
+    Bold,
+    Italic,
+    Code,
+    Link2,
+    Eye,
+    BookOpen,
+    Send,
+    X,
+    CheckCircle2,
     Heading,
     List,
     Terminal
@@ -25,6 +25,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import { improveQuestion } from "@/api/ai";
+import type { ImproveQuestionData } from "@/types/ai";
+import { Wand2, Loader2, Lightbulb } from "lucide-react";
 
 function AskQuestionPage() {
     const navigate = useNavigate();
@@ -36,6 +46,8 @@ function AskQuestionPage() {
     const [tags, setTags] = useState<string[]>([]);
     const [activeField, setActiveField] = useState<'title' | 'description' | 'tags' | null>(null);
     const [activeTab, setActiveTab] = useState<'preview' | 'guide'>('preview');
+    const [showImproveModal, setShowImproveModal] = useState(false);
+    const [improvedData, setImprovedData] = useState<ImproveQuestionData | null>(null);
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -50,6 +62,31 @@ function AskQuestionPage() {
             toast.error(error?.response?.data?.message || "Failed to post question");
         },
     });
+
+    const improveMutation = useMutation({
+        mutationFn: () => improveQuestion({ title, description }),
+        onSuccess: (res) => {
+            setImprovedData(res.data);
+            setShowImproveModal(true);
+        },
+        onError: (error: any) => {
+            const status = error?.response?.status;
+            const message = error?.response?.data?.message;
+            if (status === 429) {
+                toast.error(message || "AI limit reached. Please wait or try again later.");
+            } else {
+                toast.error(message || "Failed to improve question");
+            }
+        },
+    });
+
+    const applyImprovedVersion = () => {
+        if (!improvedData) return;
+        if (improvedData.title) setTitle(improvedData.title);
+        setDescription(improvedData.description);
+        setShowImproveModal(false);
+        toast.success("Applied AI suggestions to your draft");
+    };
 
     const addTag = () => {
         const clean = tagInput.trim().toLowerCase();
@@ -161,7 +198,7 @@ function AskQuestionPage() {
             <div className="relative mb-10 overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-50/50 via-purple-50/30 to-transparent p-6 md:p-8 dark:from-indigo-950/20 dark:via-purple-950/10">
                 <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-indigo-500/10 blur-3xl" />
                 <div className="absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-purple-500/10 blur-3xl" />
-                
+
                 <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
                         <div className="flex items-center gap-2 mb-2">
@@ -177,7 +214,7 @@ function AskQuestionPage() {
                             Join the community! Ask your question, format code blocks with markdown, and connect with developers who can help.
                         </p>
                     </div>
-                    
+
                     <div className="shrink-0 flex items-center gap-3">
                         <div className="rounded-xl border border-slate-200 bg-white/60 p-3.5 shadow-xs dark:border-slate-800 dark:bg-slate-900/60 backdrop-blur-md">
                             <div className="text-xs text-slate-400 dark:text-slate-500 font-medium">Form Progress</div>
@@ -188,8 +225,8 @@ function AskQuestionPage() {
                                     <div className={`h-2.5 w-2.5 rounded-full border border-white dark:border-slate-950 ${tags.length > 0 ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-700"}`} />
                                 </div>
                                 <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                                    {((titleSatisfied ? 1 : 0) + (descriptionSatisfied ? 1 : 0) + (tags.length > 0 ? 1 : 0)) === 3 
-                                        ? "Ready to Post" 
+                                    {((titleSatisfied ? 1 : 0) + (descriptionSatisfied ? 1 : 0) + (tags.length > 0 ? 1 : 0)) === 3
+                                        ? "Ready to Post"
                                         : `${((titleSatisfied ? 1 : 0) + (descriptionSatisfied ? 1 : 0) + (tags.length > 0 ? 1 : 0))} of 3 complete`
                                     }
                                 </span>
@@ -201,11 +238,11 @@ function AskQuestionPage() {
 
             {/* Layout Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                
+
                 {/* Form Column */}
                 <div className="lg:col-span-7">
                     <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800/80 shadow-xl shadow-slate-100/50 dark:shadow-none backdrop-blur-sm rounded-2xl p-6 md:p-8 space-y-6 relative overflow-hidden">
-                        
+
                         {/* Title Section */}
                         <div className="space-y-2.5">
                             <Label htmlFor="title" className="text-slate-805 dark:text-slate-200 font-semibold text-sm flex items-center justify-between">
@@ -219,15 +256,14 @@ function AskQuestionPage() {
                                 onChange={(e) => setTitle(e.target.value)}
                                 onFocus={() => setActiveField("title")}
                                 onBlur={() => setActiveField(null)}
-                                className={`w-full px-4 h-11 rounded-xl transition-all duration-200 bg-slate-50/50 focus:bg-white dark:bg-slate-950/40 dark:focus:bg-slate-950 border-slate-200 focus:border-indigo-500/85 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:focus:border-indigo-500/50 placeholder:text-slate-400 dark:placeholder:text-slate-600 ${
-                                    title.length > 0 && !titleSatisfied ? "border-rose-300 dark:border-rose-900/50" : ""
-                                }`}
+                                className={`w-full px-4 h-11 rounded-xl transition-all duration-200 bg-slate-50/50 focus:bg-white dark:bg-slate-950/40 dark:focus:bg-slate-950 border-slate-200 focus:border-indigo-500/85 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:focus:border-indigo-500/50 placeholder:text-slate-400 dark:placeholder:text-slate-600 ${title.length > 0 && !titleSatisfied ? "border-rose-300 dark:border-rose-900/50" : ""
+                                    }`}
                             />
-                            
+
                             <div className="space-y-1">
                                 <div className="h-1 w-full rounded-full bg-slate-100 dark:bg-slate-850 overflow-hidden">
-                                    <div 
-                                        className={`h-full transition-all duration-300 ${getProgressBarColor()}`} 
+                                    <div
+                                        className={`h-full transition-all duration-300 ${getProgressBarColor()}`}
                                         style={{ width: `${titleProgress}%` }}
                                     />
                                 </div>
@@ -314,11 +350,10 @@ function AskQuestionPage() {
                                 onChange={(e) => setDescription(e.target.value)}
                                 onFocus={() => setActiveField("description")}
                                 onBlur={() => setActiveField(null)}
-                                className={`w-full px-4 py-3 rounded-b-xl border-slate-200 focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:focus:border-indigo-500/50 bg-slate-50/50 focus:bg-white dark:bg-slate-950/40 dark:focus:bg-slate-950 placeholder:text-slate-400 dark:placeholder:text-slate-600 min-h-[220px] rounded-t-none border-t-0 shadow-xs focus-visible:ring-0 focus-visible:border-indigo-500/80 focus:outline-none transition-all duration-200 ${
-                                    description.length > 0 && !descriptionSatisfied ? "border-rose-300 dark:border-rose-900/50" : ""
-                                }`}
+                                className={`w-full px-4 py-3 rounded-b-xl border-slate-200 focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:focus:border-indigo-500/50 bg-slate-50/50 focus:bg-white dark:bg-slate-950/40 dark:focus:bg-slate-950 placeholder:text-slate-400 dark:placeholder:text-slate-600 min-h-[220px] rounded-t-none border-t-0 shadow-xs focus-visible:ring-0 focus-visible:border-indigo-500/80 focus:outline-none transition-all duration-200 ${description.length > 0 && !descriptionSatisfied ? "border-rose-300 dark:border-rose-900/50" : ""
+                                    }`}
                             />
-                            
+
                             <div className="flex items-center justify-between text-xs font-medium">
                                 <span className={descriptionSatisfied ? "text-emerald-500 dark:text-emerald-400" : "text-slate-400 dark:text-slate-500"}>
                                     {descriptionSatisfied ? "Minimum length reached" : "Minimum 20 characters required"}
@@ -326,6 +361,28 @@ function AskQuestionPage() {
                                 <span className="text-slate-400 dark:text-slate-500">
                                     {description.length} characters
                                 </span>
+                            </div>
+                            <div className="flex justify-end">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => improveMutation.mutate()}
+                                    disabled={!descriptionSatisfied || improveMutation.isPending}
+                                    className="border-indigo-200 bg-indigo-50/50 text-indigo-600 hover:bg-indigo-100/60 dark:border-indigo-900/50 dark:bg-indigo-950/30 dark:text-indigo-400 dark:hover:bg-indigo-950/50 font-medium gap-1.5"
+                                >
+                                    {improveMutation.isPending ? (
+                                        <>
+                                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                            Improving...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Wand2 className="h-3.5 w-3.5" />
+                                            Improve with AI
+                                        </>
+                                    )}
+                                </Button>
                             </div>
                         </div>
 
@@ -335,7 +392,7 @@ function AskQuestionPage() {
                                 <span>Categorization Tags</span>
                                 {tags.length > 0 && <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
                             </Label>
-                            
+
                             <div className="flex gap-2">
                                 <div className="relative flex-1">
                                     <Input
@@ -349,8 +406,8 @@ function AskQuestionPage() {
                                         className="w-full px-4 h-11 rounded-xl transition-all duration-200 bg-slate-50/50 focus:bg-white dark:bg-slate-950/40 dark:focus:bg-slate-950 border-slate-200 focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/10 dark:border-slate-800 dark:focus:border-indigo-500/50 placeholder:text-slate-400 dark:placeholder:text-slate-600"
                                     />
                                 </div>
-                                <Button 
-                                    type="button" 
+                                <Button
+                                    type="button"
                                     onClick={addTag}
                                     className="h-11 px-5 rounded-xl border border-indigo-200 hover:border-indigo-300 dark:border-indigo-900/50 bg-indigo-50/60 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100/60 dark:hover:bg-indigo-950/50 font-semibold transition-all shadow-xs cursor-pointer"
                                 >
@@ -383,7 +440,7 @@ function AskQuestionPage() {
                                     </AnimatePresence>
                                 </div>
                             </div>
-                            
+
                             <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">
                                 Add between 1 to 5 tags, click a tag or its '✕' to remove it.
                             </p>
@@ -391,8 +448,8 @@ function AskQuestionPage() {
 
                         {/* Submit Button */}
                         <div className="pt-4">
-                            <Button 
-                                type="submit" 
+                            <Button
+                                type="submit"
                                 disabled={mutation.isPending}
                                 className="w-full h-12 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 dark:from-indigo-500 dark:to-violet-500 text-white font-semibold py-3 px-6 rounded-xl shadow-lg shadow-indigo-500/25 dark:shadow-none hover:shadow-indigo-500/35 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
                             >
@@ -414,7 +471,7 @@ function AskQuestionPage() {
 
                 {/* Sidebar Column */}
                 <div className="lg:col-span-5 space-y-6">
-                    
+
                     {/* Tab Navigation Card */}
                     <div className="bg-white dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-md shadow-slate-100/30 dark:shadow-none backdrop-blur-sm">
                         {/* Tabs Header */}
@@ -422,11 +479,10 @@ function AskQuestionPage() {
                             <button
                                 type="button"
                                 onClick={() => setActiveTab("preview")}
-                                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
-                                    activeTab === "preview" 
-                                        ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs" 
-                                        : "text-slate-500 hover:text-slate-850 dark:text-slate-400 dark:hover:text-slate-200"
-                                }`}
+                                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all cursor-pointer ${activeTab === "preview"
+                                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                                    : "text-slate-500 hover:text-slate-850 dark:text-slate-400 dark:hover:text-slate-200"
+                                    }`}
                             >
                                 <Eye className="h-3.5 w-3.5" />
                                 Live Preview
@@ -434,11 +490,10 @@ function AskQuestionPage() {
                             <button
                                 type="button"
                                 onClick={() => setActiveTab("guide")}
-                                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
-                                    activeTab === "guide" 
-                                        ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs" 
-                                        : "text-slate-500 hover:text-slate-850 dark:text-slate-400 dark:hover:text-slate-200"
-                                }`}
+                                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all cursor-pointer ${activeTab === "guide"
+                                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                                    : "text-slate-500 hover:text-slate-850 dark:text-slate-400 dark:hover:text-slate-200"
+                                    }`}
                             >
                                 <BookOpen className="h-3.5 w-3.5" />
                                 Smart Guidelines
@@ -447,7 +502,7 @@ function AskQuestionPage() {
 
                         {/* Tabs Content */}
                         <div className="p-6 min-h-[380px]">
-                            
+
                             {/* Live Draft Preview Content */}
                             {activeTab === "preview" && (
                                 <div className="space-y-4">
@@ -550,19 +605,17 @@ function AskQuestionPage() {
                                     </div>
 
                                     <div className="space-y-3.5">
-                                        
+
                                         {/* Title Guideline Card */}
-                                        <div className={`p-3.5 rounded-xl border transition-all duration-355 ${
-                                            activeField === "title" 
-                                                ? "border-indigo-500 bg-indigo-500/5 dark:bg-indigo-500/10 shadow-xs scale-[1.01]" 
-                                                : "border-slate-100 dark:border-slate-850 bg-slate-50/20 dark:bg-slate-900/10 opacity-75"
-                                        }`}>
+                                        <div className={`p-3.5 rounded-xl border transition-all duration-355 ${activeField === "title"
+                                            ? "border-indigo-500 bg-indigo-500/5 dark:bg-indigo-500/10 shadow-xs scale-[1.01]"
+                                            : "border-slate-100 dark:border-slate-850 bg-slate-50/20 dark:bg-slate-900/10 opacity-75"
+                                            }`}>
                                             <div className="flex items-start gap-2.5">
-                                                <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
-                                                    activeField === "title" 
-                                                        ? "bg-indigo-500 text-white" 
-                                                        : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
-                                                }`}>
+                                                <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${activeField === "title"
+                                                    ? "bg-indigo-500 text-white"
+                                                    : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                                                    }`}>
                                                     1
                                                 </div>
                                                 <div>
@@ -575,17 +628,15 @@ function AskQuestionPage() {
                                         </div>
 
                                         {/* Description Guideline Card */}
-                                        <div className={`p-3.5 rounded-xl border transition-all duration-355 ${
-                                            activeField === "description" 
-                                                ? "border-indigo-500 bg-indigo-500/5 dark:bg-indigo-500/10 shadow-xs scale-[1.01]" 
-                                                : "border-slate-100 dark:border-slate-850 bg-slate-50/20 dark:bg-slate-900/10 opacity-75"
-                                        }`}>
+                                        <div className={`p-3.5 rounded-xl border transition-all duration-355 ${activeField === "description"
+                                            ? "border-indigo-500 bg-indigo-500/5 dark:bg-indigo-500/10 shadow-xs scale-[1.01]"
+                                            : "border-slate-100 dark:border-slate-850 bg-slate-50/20 dark:bg-slate-900/10 opacity-75"
+                                            }`}>
                                             <div className="flex items-start gap-2.5">
-                                                <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
-                                                    activeField === "description" 
-                                                        ? "bg-indigo-500 text-white" 
-                                                        : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
-                                                }`}>
+                                                <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${activeField === "description"
+                                                    ? "bg-indigo-500 text-white"
+                                                    : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                                                    }`}>
                                                     2
                                                 </div>
                                                 <div>
@@ -598,17 +649,15 @@ function AskQuestionPage() {
                                         </div>
 
                                         {/* Tags Guideline Card */}
-                                        <div className={`p-3.5 rounded-xl border transition-all duration-355 ${
-                                            activeField === "tags" 
-                                                ? "border-indigo-500 bg-indigo-500/5 dark:bg-indigo-500/10 shadow-xs scale-[1.01]" 
-                                                : "border-slate-100 dark:border-slate-850 bg-slate-50/20 dark:bg-slate-900/10 opacity-75"
-                                        }`}>
+                                        <div className={`p-3.5 rounded-xl border transition-all duration-355 ${activeField === "tags"
+                                            ? "border-indigo-500 bg-indigo-500/5 dark:bg-indigo-500/10 shadow-xs scale-[1.01]"
+                                            : "border-slate-100 dark:border-slate-850 bg-slate-50/20 dark:bg-slate-900/10 opacity-75"
+                                            }`}>
                                             <div className="flex items-start gap-2.5">
-                                                <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
-                                                    activeField === "tags" 
-                                                        ? "bg-indigo-500 text-white" 
-                                                        : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
-                                                }`}>
+                                                <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${activeField === "tags"
+                                                    ? "bg-indigo-500 text-white"
+                                                    : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                                                    }`}>
                                                     3
                                                 </div>
                                                 <div>
@@ -649,6 +698,75 @@ function AskQuestionPage() {
                 </div>
 
             </div>
+
+            <Dialog open={showImproveModal} onOpenChange={setShowImproveModal}>
+                <DialogContent className="max-w-lg rounded-2xl">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
+                            <Sparkles className="h-4.5 w-4.5 text-indigo-500" />
+                            AI-Improved Question
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    {improvedData && (
+                        <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
+                            <div>
+                                <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                                    Improved Title
+                                </p>
+                                <p className="rounded-lg border border-indigo-100 bg-indigo-50/40 p-3 text-sm font-medium text-slate-800 dark:border-indigo-900/40 dark:bg-indigo-950/20 dark:text-slate-100">
+                                    {improvedData.title || title}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                                    Improved Description
+                                </p>
+                                <p className="whitespace-pre-wrap rounded-lg border border-indigo-100 bg-indigo-50/40 p-3 text-sm text-slate-700 dark:border-indigo-900/40 dark:bg-indigo-950/20 dark:text-slate-200">
+                                    {improvedData.description}
+                                </p>
+                            </div>
+
+                            {improvedData.suggestions?.length > 0 && (
+                                <div>
+                                    <p className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                                        <Lightbulb className="h-3.5 w-3.5" />
+                                        Suggestions to make it even better
+                                    </p>
+                                    <ul className="space-y-1.5">
+                                        {improvedData.suggestions.map((s, i) => (
+                                            <li
+                                                key={i}
+                                                className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-300"
+                                            >
+                                                <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-indigo-400" />
+                                                {s}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    <DialogFooter className="gap-2">
+                        <Button
+                            variant="outline"
+                            onClick={() => setShowImproveModal(false)}
+                        >
+                            Dismiss
+                        </Button>
+                        <Button
+                            onClick={applyImprovedVersion}
+                            className="bg-indigo-600 text-white hover:bg-indigo-700"
+                        >
+                            Apply to Draft
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
         </div>
     );
 }

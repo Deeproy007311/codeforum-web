@@ -1,5 +1,6 @@
 import { apiClient } from "./client";
-import type { AIUsage, GenerateAnswerResponse } from "@/types/ai";
+import type { AIUsage, GenerateAnswerResponse, ImproveQuestionResponse } from "@/types/ai";
+
 
 export const generateAIAnswer = async (payload: {
     title: string;
@@ -18,4 +19,15 @@ export const getAIUsage = async (): Promise<AIUsage> => {
         "/api/ai/usage"
     );
     return data.usage;
+};
+
+export const improveQuestion = async (payload: {
+    title: string;
+    description: string;
+}): Promise<ImproveQuestionResponse> => {
+    const { data } = await apiClient.post<ImproveQuestionResponse>(
+        "/api/ai/improve-question",
+        payload
+    );
+    return data;
 };
