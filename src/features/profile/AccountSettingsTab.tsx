@@ -3,7 +3,6 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { deleteMyAccount } from "@/api/auth";
 import { useAuthStore } from "@/store/authStore";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
     AlertDialog,
