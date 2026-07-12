@@ -13,6 +13,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import EditQuestionPage from "@/features/questions/EditQuestionPage";
 import ExplainCodePage from "@/features/ai/ExplainCodePage";
 import ProfilePage from "@/features/profile/ProfilePage";
+import NotFoundPage from "@/components/NotFoundPage";
 
 function App() {
   const token = useAuthStore((state) => state.token);
@@ -63,7 +64,9 @@ function App() {
           <Route path="/questions/:id/edit" element={<EditQuestionPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
+
     </Routes>
   );
 }

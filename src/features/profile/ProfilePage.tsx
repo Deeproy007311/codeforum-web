@@ -3,6 +3,7 @@ import { useAuthStore } from "@/store/authStore";
 import AIHistoryTab from "./AIHistoryTab";
 import AccountSettingsTab from "./AccountSettingsTab";
 import { Sparkles, Settings, CreditCard } from "lucide-react";
+import SubscriptionTab from "./SubscriptionTab";
 
 function ProfilePage() {
     const user = useAuthStore((state) => state.user);
@@ -24,7 +25,7 @@ function ProfilePage() {
                         <Sparkles className="h-3.5 w-3.5" />
                         AI History
                     </TabsTrigger>
-                    <TabsTrigger value="subscription" className="flex items-center gap-1.5" disabled>
+                    <TabsTrigger value="subscription" className="flex items-center gap-1.5">
                         <CreditCard className="h-3.5 w-3.5" />
                         Subscription
                     </TabsTrigger>
@@ -39,7 +40,7 @@ function ProfilePage() {
                 </TabsContent>
 
                 <TabsContent value="subscription">
-                    <p className="text-sm text-slate-400">Coming soon in Phase 5.</p>
+                    <SubscriptionTab />
                 </TabsContent>
 
                 <TabsContent value="settings">
