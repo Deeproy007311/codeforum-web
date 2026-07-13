@@ -1,30 +1,36 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Code2, LogOut, Search } from "lucide-react";
+import { Code2, LogOut, Search, Menu, X } from "lucide-react";
 
 function Navbar() {
     const navigate = useNavigate();
     const user = useAuthStore((state) => state.user);
     const logout = useAuthStore((state) => state.logout);
     const [search, setSearch] = useState("");
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const handleLogout = () => {
         logout();
+        setMobileMenuOpen(false);
         navigate("/login");
     };
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
+        setMobileMenuOpen(false);
         navigate(`/questions${search ? `?search=${encodeURIComponent(search)}` : ""}`);
     };
+
+    const closeMenu = () => setMobileMenuOpen(false);
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-md dark:border-slate-800/80 dark:bg-[#060812]/80">
             <div className="mx-auto flex max-w-6xl h-16 items-center justify-between gap-4 px-4">
-                <Link to="/" className="flex items-center gap-2 shrink-0 group">
+                <Link to="/" className="flex items-center gap-2 shrink-0 group" onClick={closeMenu}>
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 shadow-md shadow-indigo-500/20 transition-transform group-hover:scale-105">
                         <Code2 className="h-4.5 w-4.5 text-white" />
                     </div>
@@ -33,7 +39,8 @@ function Navbar() {
                     </span>
                 </Link>
 
-                <form onSubmit={handleSearch} className="hidden max-w-md flex-1 sm:block">
+                {/* Desktop search */}
+                <form onSubmit={handleSearch} className="hidden max-w-md flex-1 md:block">
                     <div className="relative w-full">
                         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                         <Input
@@ -45,7 +52,8 @@ function Navbar() {
                     </div>
                 </form>
 
-                <div className="flex shrink-0 items-center gap-3">
+                {/* Desktop nav */}
+                <div className="hidden shrink-0 items-center gap-3 md:flex">
                     <Link to="/questions">
                         <Button variant="ghost" size="sm" className="h-9 rounded-lg text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 font-medium">
                             Questions
@@ -60,7 +68,7 @@ function Navbar() {
                     {user ? (
                         <div className="flex items-center gap-3">
                             <Link to="/profile" className="hidden text-sm text-gray-600 hover:underline sm:inline">
-                                <span className="font-semibold">{user.username}</span>
+                                <span className="font-semibold">{user.username}</span>{" "}
                                 <span className="rounded-full bg-indigo-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400">
                                     {user.plan}
                                 </span>
@@ -90,7 +98,109 @@ function Navbar() {
                         </div>
                     )}
                 </div>
+
+                {/* Mobile hamburger button */}
+                <button
+                    type="button"
+                    onClick={() => setMobileMenuOpen((prev) => !prev)}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900/60 md:hidden"
+                    aria-label="Toggle menu"
+                >
+                    {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                </button>
             </div>
+
+            {/* Mobile dropdown menu */}
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2, ease: "easeInOut" }}
+                        className="overflow-hidden border-t border-slate-200/80 bg-white dark:border-slate-800/80 dark:bg-[#060812] md:hidden"
+                    >
+                        <div className="space-y-4 px-4 py-4">
+                            <form onSubmit={handleSearch}>
+                                <div className="relative w-full">
+                                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+                                    <Input
+                                        placeholder="Search questions..."
+                                        value={search}
+                                        onChange={(e) => setSearch(e.target.value)}
+                                        className="w-full pl-9 h-9 rounded-lg border-slate-200 bg-slate-50 text-sm dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-100"
+                                    />
+                                </div>
+                            </form>
+
+                            <div className="flex flex-col gap-1">
+                                <Link to="/questions" onClick={closeMenu}>
+                                    <Button
+                                        variant="ghost"
+                                        className="w-full justify-start text-slate-600 dark:text-slate-300"
+                                    >
+                                        Questions
+                                    </Button>
+                                </Link>
+                                <Link to="/ai/explain-code" onClick={closeMenu}>
+                                    <Button
+                                        variant="ghost"
+                                        className="w-full justify-start text-slate-600 dark:text-slate-300"
+                                    >
+                                        AI Tools
+                                    </Button>
+                                </Link>
+                                {user && (
+                                    <Link to="/profile" onClick={closeMenu}>
+                                        <Button
+                                            variant="ghost"
+                                            className="w-full justify-start text-slate-600 dark:text-slate-300"
+                                        >
+                                            Profile
+                                        </Button>
+                                    </Link>
+                                )}
+                            </div>
+
+                            <div className="border-t border-slate-100 pt-4 dark:border-slate-800">
+                                {user ? (
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-2 px-2">
+                                            <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                                                {user.username}
+                                            </span>
+                                            <span className="rounded-full bg-indigo-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400">
+                                                {user.plan}
+                                            </span>
+                                        </div>
+                                        <Button
+                                            variant="outline"
+                                            onClick={handleLogout}
+                                            className="w-full justify-center border-slate-200 text-slate-700 hover:text-red-600 dark:border-slate-800 dark:text-slate-300"
+                                        >
+                                            <LogOut className="mr-1.5 h-3.5 w-3.5" />
+                                            Log Out
+                                        </Button>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col gap-2">
+                                        <Link to="/login" onClick={closeMenu}>
+                                            <Button variant="outline" className="w-full">
+                                                Log In
+                                            </Button>
+                                        </Link>
+                                        <Link to="/register" onClick={closeMenu}>
+                                            <Button className="w-full bg-indigo-600 text-white hover:bg-indigo-700">
+                                                Register
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </header>
     );
 }
