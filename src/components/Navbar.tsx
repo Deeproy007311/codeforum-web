@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Code2, LogOut, Search, Menu, X } from "lucide-react";
+import { Code2, LogOut, Search, Menu, X, Sparkles } from "lucide-react";
 
 function Navbar() {
     const navigate = useNavigate();
@@ -59,9 +59,17 @@ function Navbar() {
                             Questions
                         </Button>
                     </Link>
-                    <Link to="/ai/explain-code">
-                        <Button variant="ghost" size="sm">
-                            AI Tools
+                    <Link to="/ai/explain-code" className="group relative">
+                        <span className="absolute -inset-2 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 opacity-0 blur-lg transition-opacity duration-300 group-hover:opacity-40" />
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="relative h-9 gap-1.5 rounded-lg font-medium text-slate-600 hover:bg-transparent hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400"
+                        >
+                            <Sparkles className="h-4 w-4 animate-pulse text-indigo-500 dark:text-indigo-400" />
+                            <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
+                                AI Tools
+                            </span>
                         </Button>
                     </Link>
 

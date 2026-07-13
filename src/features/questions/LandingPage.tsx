@@ -93,7 +93,7 @@ const aiShowcaseTabs = [
     {
         id: "explain",
         title: "AI Code Explain",
-        badge: "Coming Soon",
+        badge: "Live",
         tagline: "Understand Complex Logic",
         description: "Struggling with advanced or poorly documented code? Highlight syntax, APIs, or loops, and get a clear line-by-line breakdown of exactly what is happening under the hood.",
         icon: Terminal,
@@ -165,7 +165,7 @@ function LandingPage() {
                     >
                         Ask. Answer.{" "}
                         <span className="bg-gradient-to-r from-indigo-650 via-violet-650 to-cyan-600 bg-clip-text text-transparent">
-                            Ship faster.
+                            Powered by AI.
                         </span>
                     </motion.h1>
 
@@ -177,8 +177,9 @@ function LandingPage() {
                         animate="visible"
                         className="mx-auto mt-6 max-w-2xl text-lg text-slate-655 leading-relaxed font-normal"
                     >
-                        A coding Q&A community loaded with **autonomous AI code answers**,
-                        deep explanation structures, and developer peer reviews to keep you flowing.
+                        A developer Q&A platform with real AI built in — instant AI-generated
+                        answers, line-by-line code explanations, and AI-polished questions,
+                        backed by a community that reviews and votes on every solution.
                     </motion.p>
 
                     {/* Action buttons */}
