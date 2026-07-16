@@ -15,10 +15,16 @@ export const useAuthStore = create<AuthState>((set) => ({
     token: localStorage.getItem("token"),
     setAuth: (user, token) => {
         localStorage.setItem("token", token);
-        set({ user, token });
+        const savedOverrides = localStorage.getItem(`profile_overrides_${user._id}`);
+        const finalUser = savedOverrides ? { ...user, ...JSON.parse(savedOverrides) } : user;
+        set({ user: finalUser, token });
         queryClient.clear();
     },
-    setUser: (user) => set({ user }),
+    setUser: (user) => {
+        const savedOverrides = localStorage.getItem(`profile_overrides_${user._id}`);
+        const finalUser = savedOverrides ? { ...user, ...JSON.parse(savedOverrides) } : user;
+        set({ user: finalUser });
+    },
     logout: () => {
         localStorage.removeItem("token");
         set({ user: null, token: null });

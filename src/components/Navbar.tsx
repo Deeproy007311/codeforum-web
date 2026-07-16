@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Code2, LogOut, Search, Menu, X, Sparkles } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 function Navbar() {
     const navigate = useNavigate();
@@ -75,7 +76,15 @@ function Navbar() {
 
                     {user ? (
                         <div className="flex items-center gap-3">
-                            <Link to="/profile" className="hidden text-sm text-gray-600 hover:underline sm:inline">
+                            <Link to="/profile" className="hidden items-center gap-2 text-sm text-gray-600 hover:text-indigo-600 sm:flex dark:text-slate-300 dark:hover:text-indigo-400">
+                                <Avatar className="h-7 w-7 ring-2 ring-indigo-500/20 shrink-0">
+                                    {user.avatar ? (
+                                        <AvatarImage src={user.avatar} alt={user.username} />
+                                    ) : null}
+                                    <AvatarFallback className="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-[10px] font-bold text-white">
+                                        {user.username?.[0]?.toUpperCase() ?? "?"}
+                                    </AvatarFallback>
+                                </Avatar>
                                 <span className="font-semibold">{user.username}</span>{" "}
                                 <span className="rounded-full bg-indigo-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400">
                                     {user.plan}
@@ -173,7 +182,15 @@ function Navbar() {
                             <div className="border-t border-slate-100 pt-4 dark:border-slate-800">
                                 {user ? (
                                     <div className="space-y-3">
-                                        <div className="flex items-center gap-2 px-2">
+                                        <div className="flex items-center gap-2.5 px-2">
+                                            <Avatar className="h-7 w-7 ring-2 ring-indigo-500/20 shrink-0">
+                                                {user.avatar ? (
+                                                    <AvatarImage src={user.avatar} alt={user.username} />
+                                                ) : null}
+                                                <AvatarFallback className="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-[10px] font-bold text-white">
+                                                    {user.username?.[0]?.toUpperCase() ?? "?"}
+                                                </AvatarFallback>
+                                            </Avatar>
                                             <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                                                 {user.username}
                                             </span>
