@@ -126,8 +126,9 @@ function LandingPage() {
             <div className="relative overflow-hidden bg-gradient-to-b from-indigo-50/80 via-white to-slate-50/50 border-b border-slate-100/85 py-20 sm:py-28">
                 {/* Decorative glow elements */}
                 <div className="pointer-events-none absolute inset-0">
-                    <div className="absolute top-0 left-1/4 h-[450px] w-[450px] rounded-full bg-indigo-500/5 blur-[120px]" />
-                    <div className="absolute right-1/4 bottom-0 h-[350px] w-[350px] rounded-full bg-violet-500/5 blur-[90px]" />
+                    <div className="absolute top-0 left-1/4 h-[450px] w-[450px] rounded-full bg-indigo-500/8 blur-[120px]" />
+                    <div className="absolute right-1/4 bottom-0 h-[350px] w-[350px] rounded-full bg-violet-500/8 blur-[90px]" />
+                    <div className="absolute top-1/3 left-1/2 -translate-x-1/2 h-[300px] w-[300px] rounded-full bg-cyan-500/5 blur-[100px]" />
                 </div>
 
                 {/* Micro Grid Background */}
@@ -164,7 +165,7 @@ function LandingPage() {
                         className="text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl md:text-7xl"
                     >
                         Ask. Answer.{" "}
-                        <span className="bg-gradient-to-r from-indigo-650 via-violet-650 to-cyan-600 bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 bg-clip-text text-transparent">
                             Powered by AI.
                         </span>
                     </motion.h1>
@@ -175,7 +176,7 @@ function LandingPage() {
                         variants={fadeUp}
                         initial="hidden"
                         animate="visible"
-                        className="mx-auto mt-6 max-w-2xl text-lg text-slate-655 leading-relaxed font-normal"
+                        className="mx-auto mt-6 max-w-2xl text-lg text-slate-600 leading-relaxed font-normal"
                     >
                         A developer Q&A platform with real AI built in — instant AI-generated
                         answers, line-by-line code explanations, and AI-polished questions,
@@ -224,7 +225,7 @@ function LandingPage() {
             </div>
 
             {/* Stats Bar */}
-            <div className="border-b border-slate-100 bg-white py-8">
+            <div className="border-b border-slate-100 bg-slate-50/30 py-10">
                 <motion.div
                     variants={stagger}
                     initial="hidden"
@@ -236,13 +237,15 @@ function LandingPage() {
                         <motion.div
                             key={label}
                             variants={fadeUp}
-                            className="flex flex-col items-center p-3 text-center"
+                            className="flex flex-col justify-between rounded-2xl border border-slate-100 bg-white p-5 hover:border-slate-200 hover:shadow-lg hover:shadow-indigo-500/5 hover:-translate-y-0.5 transition-all duration-300 group"
                         >
-                            <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
-                                <Icon className="h-5 w-5" />
+                            <div className="flex items-center justify-between gap-2 mb-3">
+                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{label}</span>
+                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 transition-colors duration-300 group-hover:bg-indigo-600 group-hover:text-white">
+                                    <Icon className="h-4.5 w-4.5" />
+                                </div>
                             </div>
-                            <span className="text-2xl font-extrabold text-slate-900">{value}</span>
-                            <span className="text-xs font-semibold text-slate-400 mt-0.5">{label}</span>
+                            <span className="text-3xl font-extrabold text-slate-900 tracking-tight">{value}</span>
                         </motion.div>
                     ))}
                 </motion.div>
@@ -311,7 +314,7 @@ function LandingPage() {
                             {/* Window Header */}
                             <div className="h-10 border-b border-slate-800 bg-slate-950/80 px-4 flex items-center justify-between shrink-0">
                                 <div className="flex items-center gap-1.5">
-                                    <div className="h-3 w-3 rounded-full bg-rose-500/80" />
+                                    <div className="h-3 w-3 rounded-full bg-rose-500/80 animate-pulse" />
                                     <div className="h-3 w-3 rounded-full bg-amber-500/80" />
                                     <div className="h-3 w-3 rounded-full bg-emerald-500/80" />
                                 </div>
@@ -324,7 +327,7 @@ function LandingPage() {
                             </div>
 
                             {/* Panel Body */}
-                            <div className="flex-1 overflow-y-auto p-5 font-mono text-xs text-slate-300 relative">
+                            <div className="flex-1 overflow-y-auto p-5 font-mono text-xs text-slate-350 relative">
                                 <AnimatePresence mode="wait">
                                     {activeTab === "answers" && (
                                         <motion.div
@@ -343,8 +346,8 @@ function LandingPage() {
                                             </div>
 
                                             <div className="bg-indigo-600/10 border border-indigo-500/25 rounded-xl p-3.5 space-y-2.5 relative overflow-hidden">
-                                                <div className="absolute right-3 top-3 flex items-center gap-1 bg-indigo-500/20 text-indigo-455 border border-indigo-500/30 text-[9px] font-bold py-0.5 px-2 rounded-full">
-                                                    <Sparkles className="h-3 w-3 animate-pulse" />
+                                                <div className="absolute right-3 top-3 flex items-center gap-1 bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 text-[9px] font-bold py-0.5 px-2 rounded-full">
+                                                    <Sparkles className="h-3 w-3 animate-pulse text-indigo-400" />
                                                     AI Verified Answer
                                                 </div>
                                                 <div className="text-[10px] text-indigo-400 uppercase tracking-wider font-bold">AI Auto-Reply</div>
@@ -371,13 +374,13 @@ function LandingPage() {
                                             className="grid grid-cols-5 gap-3 h-full"
                                         >
                                             {/* Code Editor */}
-                                            <div className="col-span-3 bg-slate-950 p-3 rounded-lg border border-slate-800 text-[10px] space-y-1 overflow-x-auto">
-                                                <div className="text-slate-600">// Custom Debounce hook</div>
-                                                <div><span className="text-indigo-400">useEffect</span>(() =&gt; &#123;</div>
-                                                <div className="bg-indigo-500/10 border-l border-indigo-505 pl-1"><span className="text-slate-400">  const</span> handler = setTimeout(() =&gt; &#123;</div>
-                                                <div className="bg-indigo-500/10 border-l border-indigo-505 pl-1">    setDebounced(val);</div>
-                                                <div className="bg-indigo-500/10 border-l border-indigo-505 pl-1">  &#125;, delay);</div>
-                                                <div>  <span className="text-violet-400">return</span> () =&gt; clearTimeout(handler);</div>
+                                            <div className="col-span-3 bg-slate-950 p-3 rounded-lg border border-slate-800 text-[10px] space-y-1 overflow-x-auto font-mono">
+                                                <div className="text-slate-500">// Custom Debounce hook</div>
+                                                <div><span className="text-pink-400 font-medium">useEffect</span>(() =&gt; &#123;</div>
+                                                <div className="bg-indigo-950/40 border-l-2 border-indigo-500 pl-1.5"><span className="text-blue-400">  const</span> handler = setTimeout(() =&gt; &#123;</div>
+                                                <div className="bg-indigo-950/40 border-l-2 border-indigo-500 pl-1.5">    setDebounced(val);</div>
+                                                <div className="bg-indigo-950/40 border-l-2 border-indigo-500 pl-1.5">  &#125;, delay);</div>
+                                                <div>  <span className="text-pink-400">return</span> () =&gt; clearTimeout(handler);</div>
                                                 <div>&#125;, [val, delay]);</div>
                                             </div>
 
@@ -418,7 +421,7 @@ function LandingPage() {
                                                     <Lightbulb className="h-3.5 w-3.5 text-indigo-400" />
                                                     AI SUGGESTIONS
                                                 </div>
-                                                <div className="space-y-1 text-slate-350 font-sans">
+                                                <div className="space-y-1 text-slate-300 font-sans">
                                                     <div className="text-[11px] font-bold text-slate-200">Optimized Title:</div>
                                                     <div className="text-[11px] bg-slate-950 p-2 rounded-md border border-slate-800 text-indigo-300 font-mono mt-1">
                                                         "How to resolve CORS errors in React fetch requests to custom APIs?"
@@ -488,7 +491,7 @@ function LandingPage() {
                         <motion.div key={q._id} variants={fadeUp}>
                             <Link
                                 to={isLoggedIn ? `/questions/${q._id}` : "/login"}
-                                className="group flex h-full flex-col justify-between rounded-2xl border border-slate-200/75 bg-white p-6 shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md hover:shadow-slate-100/50"
+                                className="group flex h-full flex-col justify-between rounded-2xl border border-slate-100 bg-white p-6 shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-250 hover:shadow-xl hover:shadow-indigo-500/[0.03]"
                             >
                                 <div>
                                     <div className="mb-2.5 flex items-start gap-2">
@@ -505,7 +508,7 @@ function LandingPage() {
                                         {q.description}
                                     </p>
                                 </div>
-                                <div className="flex items-center justify-between border-t border-slate-50 pt-4">
+                                <div className="flex items-center justify-between border-t border-slate-100/60 pt-4">
                                     <div className="flex items-center gap-2">
                                         <Avatar className="h-6 w-6 border border-slate-100">
                                             <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-violet-500 text-[10px] text-white font-bold">
@@ -543,16 +546,16 @@ function LandingPage() {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: "-60px" }}
-                        className="grid gap-8 sm:grid-cols-3"
+                        className="grid gap-6 sm:grid-cols-3"
                     >
                         {features.map(({ icon: Icon, title, description, bgColor }) => (
                             <motion.div
                                 key={title}
                                 variants={fadeUp}
-                                className="flex flex-col items-center text-center p-4"
+                                className="flex flex-col items-start text-left p-6 bg-white border border-slate-100 rounded-2xl hover:border-slate-200 hover:shadow-xl hover:shadow-indigo-500/[0.02] hover:-translate-y-0.5 transition-all duration-300 group"
                             >
-                                <div className={`mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border ${bgColor} shadow-xs`}>
-                                    <Icon className="h-6 w-6" />
+                                <div className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl border ${bgColor} shadow-xs transition-transform duration-300 group-hover:scale-105`}>
+                                    <Icon className="h-5.5 w-5.5" />
                                 </div>
                                 <h3 className="mb-2 font-bold text-slate-900 text-lg tracking-tight">{title}</h3>
                                 <p className="text-sm text-slate-500 leading-relaxed font-normal">

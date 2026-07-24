@@ -261,7 +261,7 @@ function AskQuestionPage() {
                             />
 
                             <div className="space-y-1">
-                                <div className="h-1 w-full rounded-full bg-slate-100 dark:bg-slate-850 overflow-hidden">
+                                <div className="h-1 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
                                     <div
                                         className={`h-full transition-all duration-300 ${getProgressBarColor()}`}
                                         style={{ width: `${titleProgress}%` }}
@@ -481,7 +481,7 @@ function AskQuestionPage() {
                                 onClick={() => setActiveTab("preview")}
                                 className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all cursor-pointer ${activeTab === "preview"
                                     ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs"
-                                    : "text-slate-500 hover:text-slate-850 dark:text-slate-400 dark:hover:text-slate-200"
+                                    : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
                                     }`}
                             >
                                 <Eye className="h-3.5 w-3.5" />
@@ -492,7 +492,7 @@ function AskQuestionPage() {
                                 onClick={() => setActiveTab("guide")}
                                 className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all cursor-pointer ${activeTab === "guide"
                                     ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs"
-                                    : "text-slate-500 hover:text-slate-850 dark:text-slate-400 dark:hover:text-slate-200"
+                                    : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
                                     }`}
                             >
                                 <BookOpen className="h-3.5 w-3.5" />
@@ -519,7 +519,7 @@ function AskQuestionPage() {
                                     <div className="space-y-4 pt-1">
                                         {/* Title Preview */}
                                         {title.trim() ? (
-                                            <h2 className="text-xl font-extrabold text-slate-850 dark:text-slate-100 leading-snug break-words">
+                                            <h2 className="text-xl font-extrabold text-slate-800 dark:text-slate-100 leading-snug break-words">
                                                 {title}
                                             </h2>
                                         ) : (
@@ -543,7 +543,7 @@ function AskQuestionPage() {
                                             </div>
                                         )}
 
-                                        <div className="h-[1px] bg-slate-100 dark:bg-slate-850 w-full my-2" />
+                                        <div className="h-[1px] bg-slate-100 dark:bg-slate-800 w-full my-2" />
 
                                         {/* Description Markdown Preview */}
                                         <div className="prose dark:prose-invert max-w-none text-[14px] leading-relaxed break-words">
@@ -552,7 +552,7 @@ function AskQuestionPage() {
                                                     components={{
                                                         code({ inline, className, children, ...props }: any) {
                                                             return (
-                                                                <code className="bg-slate-100 dark:bg-slate-850 text-indigo-650 dark:text-indigo-400 px-1.5 py-0.5 rounded text-xs font-mono" {...props}>
+                                                                <code className="bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded text-xs font-mono" {...props}>
                                                                     {children}
                                                                 </code>
                                                             );
@@ -565,29 +565,29 @@ function AskQuestionPage() {
                                                             );
                                                         },
                                                         p({ children }) {
-                                                            return <p className="mb-3 text-slate-750 dark:text-slate-350">{children}</p>;
+                                                            return <p className="mb-3 text-slate-700 dark:text-slate-300">{children}</p>;
                                                         },
                                                         a({ children, href }) {
-                                                            return <a href={href} target="_blank" rel="noreferrer" className="text-indigo-500 dark:text-indigo-400 underline hover:text-indigo-650 font-medium">{children}</a>;
+                                                            return <a href={href} target="_blank" rel="noreferrer" className="text-indigo-500 dark:text-indigo-400 underline hover:text-indigo-700 font-medium">{children}</a>;
                                                         },
                                                         ul({ children }) {
-                                                            return <ul className="list-disc pl-5 mb-3 text-slate-750 dark:text-slate-350 space-y-1">{children}</ul>;
+                                                            return <ul className="list-disc pl-5 mb-3 text-slate-700 dark:text-slate-300 space-y-1">{children}</ul>;
                                                         },
                                                         ol({ children }) {
-                                                            return <ol className="list-decimal pl-5 mb-3 text-slate-750 dark:text-slate-350 space-y-1">{children}</ol>;
+                                                            return <ol className="list-decimal pl-5 mb-3 text-slate-700 dark:text-slate-300 space-y-1">{children}</ol>;
                                                         },
                                                         li({ children }) {
                                                             return <li>{children}</li>;
                                                         },
-                                                        h1({ children }) { return <h3 className="text-lg font-bold text-slate-850 dark:text-slate-100 mt-4 mb-2">{children}</h3>; },
-                                                        h2({ children }) { return <h3 className="text-base font-bold text-slate-850 dark:text-slate-100 mt-4 mb-2">{children}</h3>; },
-                                                        h3({ children }) { return <h4 className="text-sm font-bold text-slate-850 dark:text-slate-100 mt-4.5 mb-1.5">{children}</h4>; },
+                                                        h1({ children }) { return <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mt-4 mb-2">{children}</h3>; },
+                                                        h2({ children }) { return <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 mt-4 mb-2">{children}</h3>; },
+                                                        h3({ children }) { return <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 mt-4.5 mb-1.5">{children}</h4>; },
                                                     }}
                                                 >
                                                     {description}
                                                 </ReactMarkdown>
                                             ) : (
-                                                <p className="text-slate-300 dark:text-slate-750 italic">
+                                                <p className="text-slate-300 dark:text-slate-700 italic">
                                                     Start typing your question details and code snippets in the description editor to see a formatted preview...
                                                 </p>
                                             )}
@@ -609,7 +609,7 @@ function AskQuestionPage() {
                                         {/* Title Guideline Card */}
                                         <div className={`p-3.5 rounded-xl border transition-all duration-355 ${activeField === "title"
                                             ? "border-indigo-500 bg-indigo-500/5 dark:bg-indigo-500/10 shadow-xs scale-[1.01]"
-                                            : "border-slate-100 dark:border-slate-850 bg-slate-50/20 dark:bg-slate-900/10 opacity-75"
+                                            : "border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-slate-900/10 opacity-75"
                                             }`}>
                                             <div className="flex items-start gap-2.5">
                                                 <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${activeField === "title"
@@ -630,7 +630,7 @@ function AskQuestionPage() {
                                         {/* Description Guideline Card */}
                                         <div className={`p-3.5 rounded-xl border transition-all duration-355 ${activeField === "description"
                                             ? "border-indigo-500 bg-indigo-500/5 dark:bg-indigo-500/10 shadow-xs scale-[1.01]"
-                                            : "border-slate-100 dark:border-slate-850 bg-slate-50/20 dark:bg-slate-900/10 opacity-75"
+                                            : "border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-slate-900/10 opacity-75"
                                             }`}>
                                             <div className="flex items-start gap-2.5">
                                                 <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${activeField === "description"
@@ -651,7 +651,7 @@ function AskQuestionPage() {
                                         {/* Tags Guideline Card */}
                                         <div className={`p-3.5 rounded-xl border transition-all duration-355 ${activeField === "tags"
                                             ? "border-indigo-500 bg-indigo-500/5 dark:bg-indigo-500/10 shadow-xs scale-[1.01]"
-                                            : "border-slate-100 dark:border-slate-850 bg-slate-50/20 dark:bg-slate-900/10 opacity-75"
+                                            : "border-slate-100 dark:border-slate-800 bg-slate-50/20 dark:bg-slate-900/10 opacity-75"
                                             }`}>
                                             <div className="flex items-start gap-2.5">
                                                 <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${activeField === "tags"
@@ -676,7 +676,7 @@ function AskQuestionPage() {
 
                     {/* Quick Checklist Footer Sidebar */}
                     <div className="bg-slate-50 dark:bg-[#0c0f1d] border border-slate-200/60 dark:border-slate-800/80 rounded-2xl p-5 space-y-3">
-                        <h4 className="text-xs font-bold text-slate-700 dark:text-slate-350 uppercase tracking-wider flex items-center gap-1.5">
+                        <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
                             <Terminal className="h-4 w-4 text-indigo-500 shrink-0" />
                             Before you post checklist
                         </h4>

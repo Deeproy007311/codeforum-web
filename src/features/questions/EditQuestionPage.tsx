@@ -200,7 +200,7 @@ function EditQuestionPage() {
                             type="button"
                             variant="outline"
                             onClick={() => navigate(`/questions/${id}`)}
-                            className="rounded-lg border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-350 dark:hover:bg-slate-900 h-9 font-medium"
+                            className="rounded-lg border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900 h-9 font-medium"
                         >
                             Cancel
                         </Button>

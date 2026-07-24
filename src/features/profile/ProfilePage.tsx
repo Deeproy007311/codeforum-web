@@ -454,16 +454,16 @@ function ProfilePage() {
                     {/* Tabs container */}
                     <div className="rounded-2xl border border-slate-100 bg-white/50 p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900/10 backdrop-blur-md">
                         <Tabs defaultValue="ai-history" className="w-full">
-                            <TabsList className="mb-6 p-1 bg-slate-100 dark:bg-slate-900/80 rounded-xl flex w-fit border border-slate-200/50 dark:border-slate-800/40">
-                                <TabsTrigger value="ai-history" className="flex items-center gap-1.5 px-4 py-2 text-xs rounded-lg transition-all">
+                            <TabsList className="mb-6 p-1.5 bg-slate-100 dark:bg-slate-900/80 rounded-xl flex flex-col sm:flex-row w-full sm:w-fit gap-1 border border-slate-200/50 dark:border-slate-800/40 h-auto! sm:h-9!">
+                                <TabsTrigger value="ai-history" className="flex items-center justify-center gap-1.5 px-4 py-2 text-xs rounded-lg transition-all w-full sm:w-auto h-8 sm:h-auto">
                                     <Sparkles className="h-3.5 w-3.5 text-indigo-500 dark:text-indigo-400" />
                                     AI History
                                 </TabsTrigger>
-                                <TabsTrigger value="subscription" className="flex items-center gap-1.5 px-4 py-2 text-xs rounded-lg transition-all">
+                                <TabsTrigger value="subscription" className="flex items-center justify-center gap-1.5 px-4 py-2 text-xs rounded-lg transition-all w-full sm:w-auto h-8 sm:h-auto">
                                     <CreditCard className="h-3.5 w-3.5 text-purple-500 dark:text-purple-400" />
                                     Subscription Plan
                                 </TabsTrigger>
-                                <TabsTrigger value="settings" className="flex items-center gap-1.5 px-4 py-2 text-xs rounded-lg transition-all">
+                                <TabsTrigger value="settings" className="flex items-center justify-center gap-1.5 px-4 py-2 text-xs rounded-lg transition-all w-full sm:w-auto h-8 sm:h-auto">
                                     <Settings className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
                                     Security & settings
                                 </TabsTrigger>

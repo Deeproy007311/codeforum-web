@@ -89,7 +89,7 @@ function AnswerCard({ answer, questionId, isQuestionOwner }: AnswerCardProps) {
 
                 <div className="flex-1 min-w-0">
                     {answer.isAccepted && (
-                        <Badge className="mb-3 bg-emerald-500/10 text-emerald-650 hover:bg-emerald-500/15 border-emerald-500/20 dark:bg-emerald-500/20 dark:text-emerald-450 flex items-center gap-1 w-fit text-[11px] font-semibold py-0.5 px-2">
+                        <Badge className="mb-3 bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/15 border-emerald-500/20 dark:bg-emerald-500/20 dark:text-emerald-400 flex items-center gap-1 w-fit text-[11px] font-semibold py-0.5 px-2">
                             <CheckCircle2 className="h-3 w-3" />
                             Accepted Answer
                         </Badge>
@@ -156,7 +156,7 @@ function AnswerCard({ answer, questionId, isQuestionOwner }: AnswerCardProps) {
                                     variant="outline" 
                                     size="sm" 
                                     onClick={() => setIsEditing(true)}
-                                    className="h-8 border-slate-200 hover:bg-slate-50 text-slate-600 dark:border-slate-800 dark:text-slate-350 dark:hover:bg-slate-900 flex items-center gap-1.5"
+                                    className="h-8 border-slate-200 hover:bg-slate-50 text-slate-600 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900 flex items-center gap-1.5"
                                 >
                                     <Edit2 className="h-3 w-3" />
                                     Edit

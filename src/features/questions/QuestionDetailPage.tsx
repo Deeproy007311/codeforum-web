@@ -229,7 +229,7 @@ function QuestionDetailPage() {
                             variant="outline"
                             size="sm"
                             onClick={() => navigate(`/questions/${question._id}/edit`)}
-                            className="h-8.5 border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-350 dark:hover:bg-slate-900 flex items-center gap-1.5 font-medium"
+                            className="h-8.5 border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900 flex items-center gap-1.5 font-medium"
                         >
                             <Edit2 className="h-3.5 w-3.5" />
                             Edit Question
@@ -251,7 +251,7 @@ function QuestionDetailPage() {
                                 <AlertDialogFooter>
                                     <AlertDialogCancel className="rounded-lg">Cancel</AlertDialogCancel>
                                     <AlertDialogAction
-                                        className="bg-red-600 hover:bg-red-750 text-white rounded-lg"
+                                        className="bg-red-600 hover:bg-red-700 text-white rounded-lg"
                                         onClick={() => deleteMutation.mutate()}
                                     >
                                         Delete
@@ -291,7 +291,7 @@ function QuestionDetailPage() {
                                 </span>
                             </div>
                             <div className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500 font-medium">
-                                <Clock className="h-3.5 w-3.5 text-slate-350 dark:text-slate-600" />
+                                <Clock className="h-3.5 w-3.5 text-slate-300 dark:text-slate-600" />
                                 <span>asked {timeAgo(question.createdAt)}</span>
                             </div>
                         </div>
@@ -301,7 +301,7 @@ function QuestionDetailPage() {
 
             {/* Answers Section */}
             <div className="mt-8">
-                <h2 className="mb-4 text-lg font-bold text-slate-850 dark:text-slate-100 flex items-center gap-2">
+                <h2 className="mb-4 text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                     <span>{answers.length} {answers.length === 1 ? "Answer" : "Answers"}</span>
                 </h2>
 
