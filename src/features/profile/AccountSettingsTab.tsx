@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { deleteMyAccount } from "@/api/auth";
+import { deleteMyAccount, updatePassword } from "@/api/auth";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,11 +25,10 @@ function AccountSettingsTab() {
     const user = useAuthStore((state) => state.user);
     const logout = useAuthStore((state) => state.logout);
 
-    // Mock password state
+    // Password state
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
     const [showPass, setShowPass] = useState(false);
 
     const deleteMutation = useMutation({
@@ -44,6 +43,19 @@ function AccountSettingsTab() {
         },
     });
 
+    const updatePasswordMutation = useMutation({
+        mutationFn: updatePassword,
+        onSuccess: () => {
+            toast.success("Password updated successfully!");
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+        },
+        onError: (error: any) => {
+            toast.error(error?.response?.data?.message || "Failed to update password");
+        },
+    });
+
     if (!user) return null;
 
     const handleUpdatePassword = (e: React.FormEvent) => {
@@ -54,16 +66,7 @@ function AccountSettingsTab() {
             return;
         }
 
-        setIsUpdatingPassword(true);
-        
-        // Mock API latency
-        setTimeout(() => {
-            setIsUpdatingPassword(false);
-            toast.success("Password updated successfully!");
-            setCurrentPassword("");
-            setNewPassword("");
-            setConfirmPassword("");
-        }, 1200);
+        updatePasswordMutation.mutate({ currentPassword, newPassword });
     };
 
     return (
@@ -138,10 +141,10 @@ function AccountSettingsTab() {
 
                     <Button
                         type="submit"
-                        disabled={isUpdatingPassword}
+                        disabled={updatePasswordMutation.isPending}
                         className="h-9 rounded-lg text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition-colors"
                     >
-                        {isUpdatingPassword ? "Updating security keys..." : "Update Password"}
+                        {updatePasswordMutation.isPending ? "Updating security keys..." : "Update Password"}
                     </Button>
                 </form>
             </motion.div>

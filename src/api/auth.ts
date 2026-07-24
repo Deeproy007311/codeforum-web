@@ -4,6 +4,7 @@ import type {
     LoginPayload,
     RegisterPayload,
     User,
+    UpdatePasswordPayload,
 } from "@/types/auth";
 
 export const registerUser = async (
@@ -35,4 +36,10 @@ export const getCurrentUser = async (): Promise<User> => {
 
 export const deleteMyAccount = async (): Promise<void> => {
     await apiClient.delete("/api/users/me");
+};
+
+export const updatePassword = async (
+    payload: UpdatePasswordPayload
+): Promise<void> => {
+    await apiClient.put("/api/users/update-password", payload);
 };
